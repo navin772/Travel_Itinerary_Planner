@@ -6,26 +6,16 @@ import requests
 
 load_dotenv()
 
+def get_hotel_data(code, start_date, end_date, budget):
+    url = "https://travel-advisor.p.rapidapi.com/hotels/list"
 
-def get_hotel_data(destination, start_date, end_date, budget):
-
-    # Get hotel data from an API
-    url = "https://hotels4.p.rapidapi.com/locations/v3/search"
-
-    querystring = {"q":destination,"locale":"en_US","langid":"1033","siteid":"300000001"}
+    querystring = {"location_id":code,"adults":"1","rooms":"1","nights":"2","offset":"0","currency":"USD","order":"asc","limit":"25","lang":"en_US"}
 
     headers = {
-        "X-RapidAPI-Key": os.getenv('RAPID_API_KEY'),
-        "X-RapidAPI-Host": "hotels4.p.rapidapi.com"
+        "X-RapidAPI-Key": "7e2044af5fmsh645c3016f861157p104f11jsnca6fe90724fe",
+        "X-RapidAPI-Host": "travel-advisor.p.rapidapi.com"
     }
 
     response = requests.request("GET", url, headers=headers, params=querystring)
-    obj = json.loads(response.text)
-    json_formatted_data = json.dumps(obj, indent=2)
-    # print(json_formatted_data)
-    #process response here and store hotel names in organized_hotel_data
-    organized_hotel_data = []
-    
-    return organized_hotel_data
 
-get_hotel_data("new delhi", "2020-01-01", "2020-01-02", 100)
+    return response.json()['data']

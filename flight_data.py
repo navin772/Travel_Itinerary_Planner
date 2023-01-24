@@ -2,6 +2,7 @@
 import os
 from dotenv import load_dotenv
 import requests
+from get_location import get_locationId
 
 load_dotenv()
 
