@@ -13,7 +13,7 @@ def text_to_code(text):
     querystring = {"q":text,"limit":"10"}
 
     headers = {
-        "X-RapidAPI-Key": "e42d97ca3bmsh173d6fe9aba63d8p1d4c07jsna586a8662638",
+        "X-RapidAPI-Key": os.getenv('RAPID_API_KEY'),
         "X-RapidAPI-Host": "aerodatabox.p.rapidapi.com"
     }
 
@@ -22,7 +22,7 @@ def text_to_code(text):
     return response.json()['items'][0]['iata']
 
 
-def get_flight_data(source, destination, date, budget):
+def get_flight_data(source, destination, date):
     # date format: YYYY-MM-DD
     # Get flight data from an API
     source = text_to_code(source)
@@ -32,12 +32,25 @@ def get_flight_data(source, destination, date, budget):
     querystring = {"origin":source,"destination":destination,"date":date,"adults":"1","currency":"USD","countryCode":"US","market":"en-US"}
 
     headers = {
-        "X-RapidAPI-Key": os.getenv('RAPID_API_KEY'),
+        "X-RapidAPI-Key": '16ad3426e0msh021039bc5b9f44ap1d1f08jsna850e721ad07',
         "X-RapidAPI-Host": "skyscanner50.p.rapidapi.com"
     }
 
     response = requests.request("GET", url, headers=headers, params=querystring)
+    flight_data = response.json()
+    flight_data_1 = {}
     
-    flight_data = response.text
+    for i in range (len(flight_data['data'])):
+        price = flight_data['data'][i]['price']['amount']
+        flight_data_1[flight_data['data'][i]['legs'][0]['carriers'][0]['name']] = price
 
-    return flight_data
+    flight_data_1 = {k: v for k, v in sorted(flight_data_1.items(), key=lambda item: item[1])}
+    new_flight_data = {}
+    j = 1
+    for keys in flight_data_1.keys():
+        new_flight_data[j] = {'name': keys, 'price': flight_data_1[keys]}
+        j += 1
+
+    return new_flight_data
+ 
+# print(get_flight_data('new delhi', 'mumbai', '2023-02-01'))
