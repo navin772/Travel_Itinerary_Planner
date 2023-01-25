@@ -6,7 +6,7 @@ import requests
 
 load_dotenv()
 
-def get_hotel_data(code, start_date, end_date, budget):
+def get_hotel_data(code):
     url = "https://travel-advisor.p.rapidapi.com/hotels/list"
 
     querystring = {"location_id":code,"adults":"1","rooms":"1","nights":"2","offset":"0","currency":"USD","order":"asc","limit":"25","lang":"en_US"}
@@ -17,5 +17,17 @@ def get_hotel_data(code, start_date, end_date, budget):
     }
 
     response = requests.request("GET", url, headers=headers, params=querystring)
+    data = response.json()
 
-    return response.json()['data']
+    hotels = {}
+    for i in range(len(data['data'])):
+        if all(k in data['data'][i].keys() for k in ('price', 'name')):
+                
+                price = data['data'][i]['price'].split()[-1]   #price in USD
+                price = float(price[1:])
+                hotels[data['data'][i]['name']] = price
+                
+        else:
+            pass
+
+    return hotels
