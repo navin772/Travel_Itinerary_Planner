@@ -57,6 +57,3 @@ def determine_itinerary(budget, flag, hotel_data, activity_data):
                 'activity': activity_data[i],
             })
     return best_itinerary
-
-if __name__ == "__main__":
-    uvicorn.run("server.api:app", host="0.0.0.0", port=8000, reload=True)
