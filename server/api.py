@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 import uvicorn
+import sys
+sys.path.append('..')
 
 from flight_data import get_flight_data 
 from hotel_data import get_hotel_data

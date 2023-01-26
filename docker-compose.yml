@@ -4,6 +4,6 @@ services:
         build: .
         container_name: "core-api-container"
         ports: 
-            - "8000:15400"
+            - "8000:8000"
         volumes: 
             - ./app/:/app
